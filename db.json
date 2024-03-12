@@ -1,0 +1,7 @@
+{
+    "cuponesDescuentos": [
+        { "codgio": "coderhouse", "descuento": 15 },
+        { "codigo": "TOMAS000", "descuento": 20 },
+        { "codigo": "JS123", "descuento": 10 }
+    ]
+}

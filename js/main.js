@@ -1,74 +1,52 @@
-const arrayDeCamaras = [
-    { nombre: 'Camara 1', precio: 25000 },
-    { nombre: 'Camara 2', precio: 28800 },
-    { nombre: 'Camara 3', precio: 32000 },
-    { nombre: 'Camara 4', precio: 53000 }
+const products = [
+    { name: 'Camara 1', price: 25000, img: './img/camara1.webp' },
+    { name: 'Camara 2', price: 28800, img: './img/camara2.webp' },
+    { name: 'Camara 3', price: 32000, img: './img/camara3.webp' },
+    { name: 'Camara 4', price: 53000, img: './img/camara4.webp' },
+    { name: 'Camara 5', price: 63000, img: './img/camara5.webp' },
+    { name: 'Camara 6', price: 92000, img: './img/camara6.webp' }
 ];
 
-let carrito = [];
-let total = 0;
+let cardsContainer = document.querySelector('.container-items');
+let cart = []; // este array es para guardar ls productos en el carrito
 
-function agregarAlCarrito(seleccion) {
-    const camaraSeleccionada = arrayDeCamaras.find((camara, index) => index + 1 === seleccion);
-    //Use find para encontrar la camara seleccionada en arrayDeCamaras
+products.forEach(x => {
+    let newCard = document.createElement('div');
+    newCard.classList.add('item')
 
-    //Este if es para verificar si la camara existe se ejecuta el if
-    if (camaraSeleccionada) {
-        carrito.push(camaraSeleccionada); 
-        total += camaraSeleccionada.precio; 
-        return true;
-    }
+    newCard.innerHTML = `
+        <figure>
+            <img src="${x.img}" alt="#"/>
+        </figure>
+        <div class="info-product">
+            <h2>${x.name}</h2>
+            <p class="price">$ ${x.price}</p>
+            <button class="btn-add-cart" data-name="${x.name}" data-price="${x.price}">Añadir al carrito</button>
+        </div>
+    `
 
-    return false;
+    newCard.querySelector('.btn-add-cart').addEventListener('click', addToCart);
+    cardsContainer.appendChild(newCard);
+});
+
+function addToCart(event) {
+    const productName = event.target.dataset.name;
+    const productPrice = parseFloat(event.target.dataset.price);
+    
+    // Agregoo el producto al carrit
+    cart.push({ name: productName, price: productPrice });
+    
+    // actualiza el contador del carrito y el almacenamiento local
+    cartCount = cart.length;
+    updateCart();
 }
 
-function deseaAgregarOtro() {
-    let agregarOtro = prompt("Deseas agregar otra cámara? (si/no)").toLowerCase(); //.toLowerCase convierte todo lo ingresa a minusculas
-
-    while (agregarOtro !== 'si' && agregarOtro !== 'no') {
-        agregarOtro = prompt("Por favor, ingresa 'si' o 'no' si deseas agregar otro producto.").toLowerCase();
-    }
-
-    return agregarOtro === 'si';
-}
+function updateCart() {
+    document.getElementById('contador-productos').textContent = cartCount;
+    localStorage.setItem('cart', JSON.stringify(cart));
+}   
 
 
 
-function mostrarCarritoYTotal() {
-    let productosAgregados = "Productos agregados:\n";
-
-    carrito.forEach((camara) => {
-        productosAgregados += `${camara.nombre} - Precio: ${camara.precio}\n`; // 
-    });
-
-    productosAgregados += `Total: $${total} \nPresiona aceptar para finalizar la compra.`;
-
-    alert(productosAgregados); 
-    alert('Gracias por tu compra!');
-}
 
 
-// Aca comienza el programa👇
-let continuarAgregando = true;
-
-while (continuarAgregando) { 
-
-    
-    const seleccion = parseInt(prompt(
-        "Agregar al carrito:\n" +
-        arrayDeCamaras.map((camara, index) => `${index + 1}. ${camara.nombre} - $${camara.precio}`).join('\n')
-    )); 
-    
-    
-    if (seleccion >= 1 && seleccion <= arrayDeCamaras.length) {
-    
-
-        agregarAlCarrito(seleccion); 
-        continuarAgregando = deseaAgregarOtro(); 
-
-    } else { 
-        alert("Por favor, elija un número válido.");
-    }
-}
-
-mostrarCarritoYTotal();
